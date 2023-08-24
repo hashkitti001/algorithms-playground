@@ -12,7 +12,20 @@ Sorting = {
             tiles.slider.shiftLeft();
         }
     },
-    isort: null,
+    isort:async function isort(arr) {
+        let key, j;
+        let copy = [...arr];
+        for (let i = 1; i < copy.length; i++){
+            key = copy[i]
+            j = i - 1
+            while ((j >= 0) && (key < copy[j])){
+                copy[j + 1] = copy[j];
+                j  = j - 1;
+            }
+        copy[j + 1] = key;
+        }
+        return copy;
+    },
     lsort: null,
     
 }

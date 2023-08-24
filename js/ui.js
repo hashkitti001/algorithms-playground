@@ -23,21 +23,21 @@ const MAX_Y_SLIDE = 2;
  * eg. ['2px', '5.5px'] => [2, 5.5]
  * @param {Array} pixels array of pixels
  */
-function _pixelToFloats(pixels){
-    return pixels.map((val, _)=>Number.parseFloat(val.slice(0, -1)));
+function _pixelToFloats(pixels) {
+    return pixels.map((val, _) => Number.parseFloat(val.slice(0, -1)));
 }
 
 
-function assert(condition, msg){
+function assert(condition, msg) {
     msg = msg || '';
-    if(!condition){
+    if (!condition) {
         throw Error(`Assertion Error ${msg}`);
     }
 }
 
 
-function sum(array){
-    return array.reduce((prev, current)=>{
+function sum(array) {
+    return array.reduce((prev, current) => {
         return prev + current;
     });
 }
@@ -47,7 +47,7 @@ Random = {
         // return a random item from min to max (including boundaries)
         return Math.floor(Math.random() * (max - min + 1)) + min;
     },
-    choice: function choice(array){
+    choice: function choice(array) {
         // return a random item in array
         return array[rand(0, array.length - 1)]
     }
@@ -58,28 +58,28 @@ Random = {
 
 /////////////////////////// ARRAY
 
-function array_has(array, item){
+function array_has(array, item) {
     return array.indexOf(item) !== item;
 }
 
-Array.prototype.has = function(item){
+Array.prototype.has = function (item) {
     return array_has(this, item);
 }
 
-function swap(array, index1, index2){
-    if(index1 === index2){
+function swap(array, index1, index2) {
+    if (index1 === index2) {
         console.warn('invalid arguments the same index was repeated twice', index1);
     }
     const hold = array[index1];
-    array[index1] =  array[index2];
+    array[index1] = array[index2];
     array[index2] = hold;
 }
 
-Array.prototype.swap = function(index1, index2){
+Array.prototype.swap = function (index1, index2) {
     return swap(this, index1, index2);
 }
 
-Array.copy = function copy(array){
+Array.copy = function copy(array) {
     return [...array];
 }
 
@@ -88,7 +88,7 @@ Array.copy = function copy(array){
 /**
  * Returns width of dom element considering padding and borders
  */
-function trueWidth($Elem){
+function trueWidth($Elem) {
     let paddingOffset = _pixelToFloats([$Elem.css('padding-left'), $Elem.css('padding-right'), $Elem.css('border-left-width'), $Elem.css('border-right-width')]);
     return sum([$Elem.width(), ...paddingOffset]);
 }
@@ -96,7 +96,7 @@ function trueWidth($Elem){
 /**
  * Returns height of dom element considering padding and borders
  */
-function trueHeight($Elem){
+function trueHeight($Elem) {
     let paddingOffset = _pixelToFloats([$Elem.css('padding-top'), $Elem.css('padding-bottom'), $Elem.css('border-bottom-width'), $Elem.css('border-top-width')]);
     return sum([$Elem.height(), ...paddingOffset]);
 }
@@ -105,20 +105,20 @@ function trueHeight($Elem){
 /////////////////////////// CLASSES
 
 
-class Cursor{
+class Cursor {
 
-    constructor($parent){
+    constructor($parent) {
         this.$parent = $parent;
         this.$cursor = $(document.createElement('span'));
         this.$cursor.addClass('cursor fas fa-caret-up hide');
         $parent.append(this.$cursor);
     }
 
-    on(){
+    on() {
         this.$cursor.removeClass('hide hide2');
     }
 
-    off(){
+    off() {
         this.on();
         this.$cursor.addClass('hide2')
     }
@@ -133,13 +133,13 @@ class Cursor{
  * set it out of bounds and it will reset it self at one end of the given array negative
  * values it will reset to 0; positive it will reset at Array.length - 2
  */
-class Slider{
+class Slider {
 
-    constructor(arrayLike){
+    constructor(arrayLike) {
         this.arrayLike = arrayLike;
         this._currentPos = 0; // one dimensional
 
-        if(arrayLike.length < 2){
+        if (arrayLike.length < 2) {
             throw Error('Array must contain at least 2 elements')
         }
     }
@@ -147,25 +147,25 @@ class Slider{
     /**
      * @param {number} pos
      */
-    set currentPos(pos){
-        this.give().forEach((i)=>{
+    set currentPos(pos) {
+        this.give().forEach((i) => {
             i.cursor.off();
         });
         this._currentPos = pos;
-        this.give().forEach(i=>{
+        this.give().forEach(i => {
             i.cursor.on();
         });
     }
 
-    get currentPos(){
+    get currentPos() {
         return this._currentPos;
     }
 
-    give(){
+    give() {
         return [this.arrayLike[this.currentPos], this.arrayLike[this.currentPos + 1]];
     }
 
-    shiftLeft(){
+    shiftLeft() {
         if (this.currentPos - 1 < 0) {
             // throw Error("Can't move left at this point");
             console.warn("Can't move left at this point"); return;
@@ -173,7 +173,7 @@ class Slider{
         this.currentPos--;
     }
 
-    shiftRight(){
+    shiftRight() {
         if (this.currentPos + 1 > this.arrayLike.length - 2) {
             // throw Error("Can't move right at this point");
             console.warn("Can't move right at this point"); return;
@@ -181,15 +181,15 @@ class Slider{
         this.currentPos++;
     }
 
-    moveToEnd(){
+    moveToEnd() {
         this.currentPos = this.arrayLike.length - 2;
     }
 
-    atLeftEnd(){
+    atLeftEnd() {
         return this._currentPos == 0;
     }
 
-    atRightEnd(){
+    atRightEnd() {
         return this._currentPos == 0;
     }
 }
@@ -197,7 +197,7 @@ class Slider{
 /**
  * Represent each block in a tile container 
  */
-class Tile{
+class Tile {
     /**
      * 
      * @param {Number} value The tile's value for sorting
@@ -205,7 +205,7 @@ class Tile{
      * @param {JQuery} jQueryObject what it is
      * @param {TileContainer} tileContainer parent container
      */
-    constructor(value, index, jQueryObject, tileContainer){
+    constructor(value, index, jQueryObject, tileContainer) {
         this.value = value;
         this.jQueryObject = jQueryObject;
         this.currentYState = 0; // mid: 0, top: -1, bottom: 1,
@@ -220,21 +220,21 @@ class Tile{
         // this.cursor.on();
     }
 
-    get containerSize(){
+    get containerSize() {
         return this._tileContainer.tiles.length;
     }
 
-    get width(){
+    get width() {
         let jq = this.jQueryObject;
         return trueWidth(jq);
     }
 
-    get height(){
+    get height() {
         let jq = this.jQueryObject;
         return trueHeight(jq);
     }
 
-    get parentSize(){
+    get parentSize() {
         // width of the parent elem
         return this.jQueryObject.width();
     }
@@ -242,41 +242,41 @@ class Tile{
     /**
      * @param {number} newIndex
      */
-    set index(newIndex){
+    set index(newIndex) {
         this.currentXState = newIndex;
     }
 
-    get index(){
+    get index() {
         return this.currentXState;
     }
 
-    translate(){
-        this.jQueryObject.css('transform', `translateX(${ this.translateX }px) translateY(${ this.translateY }px)`);
+    translate() {
+        this.jQueryObject.css('transform', `translateX(${this.translateX}px) translateY(${this.translateY}px)`);
     }
-    
-    slideUp(places){
+
+    slideUp(places) {
         return this.slideY(UP, places);
     }
-    
-    slideDown(places){
+
+    slideDown(places) {
         return this.slideY(DOWN, places);
     }
 
-    slideLeft(places){
+    slideLeft(places) {
         return this.slideX(-1, places);
     }
 
-    slideRight(place){
+    slideRight(place) {
         return this.slideX(1, place);
     }
 
-    restore(){
+    restore() {
         // may not use this for a while but i thought it necessary
         this.translateX = 0;
         this.translateY = 0;
         this.translate();
     }
-    
+
     // NOTE: YOU CAN'T CALL SLIDEX AND SLIDEY SEQUENTIALLY AS 
     // AS THE LATER WILL QUICKLY OVERIDE THE FORMER AND ONLY THE ANIMATION
     // FOR THE LATER WILL PLAY
@@ -286,16 +286,16 @@ class Tile{
      * @param {Number} direction -1 or 1 
      * @param {Number} places ABSLUTE VALUE. move by how much.
      */
-    slideX(direction, places){
+    slideX(direction, places) {
         places = Math.abs(places);
         assert(this.possibleDirections.has(direction), `Invalid direction ${direction}`);
-        
+
         const multiplier = places * direction;
         const newState = this.currentXState + multiplier;
 
         // check if newState is within array
-        assert(newState >= 0 && newState <= this.containerSize -1, `invalid new state ${newState} from current state ${this.currentXState}`);
-        
+        assert(newState >= 0 && newState <= this.containerSize - 1, `invalid new state ${newState} from current state ${this.currentXState}`);
+
         var displacement = (this.width) * multiplier;
 
         // calculate small displacement discrepancies from box margins
@@ -306,29 +306,29 @@ class Tile{
         this.translate();
         this.currentXState = newState; //- 1;
 
-        return new Promise((resolve, reject)=>{
+        return new Promise((resolve, reject) => {
             // call
-            this.jQueryObject.on('transitionend', ()=>{
+            this.jQueryObject.on('transitionend', () => {
                 resolve();
             });
         });
     }
-    
+
     /**
      * 
      * @param {Number} direction -1 or 1 
      * @param {Number} places ABSLUTE VALUE. move by how much.
      */
-    slideY(direction, places){
+    slideY(direction, places) {
         assert(this.possibleDirections.has(direction), `Invalid direction ${direction}`);
         assert(this.possbleStatesY.has(places), `Invalid state ${places}`);
-        
-        const multiplier = Math.abs(places) *  direction;
+
+        const multiplier = Math.abs(places) * direction;
         const newState = multiplier + this.currentYState;
 
-        if (places > MAX_Y_SLIDE || 
+        if (places > MAX_Y_SLIDE ||
             !this.possbleStatesY.has(newState)
-            ){
+        ) {
             throw Error(`Invalid place value ${places}`);
         }
         const displacement = (this.height + 15) * multiplier;
@@ -336,16 +336,16 @@ class Tile{
         this.translateY = displacement;
         this.translate();
         this.currentYState = newState;
-        
-        return new Promise((resolve, reject)=>{
+
+        return new Promise((resolve, reject) => {
             // call
-            this.jQueryObject.on('transitionend', ()=>{
+            this.jQueryObject.on('transitionend', () => {
                 resolve();
             });
         });
     }
 
-    lock(){
+    lock() {
         // set this tile as immovable
     }
 }
@@ -353,22 +353,22 @@ class Tile{
 /**
  * Represents the container for tiles
  */
-class TileContainer{
-    constructor($tiles){
+class TileContainer {
+    constructor($tiles) {
         this.tiles = this.toTiles($tiles);
         this.slider = new Slider(this.tiles);
     }
 
-    async shuffle(){
+    async shuffle() {
         const copyT = Array.copy(this.tiles);
         let i = 0;
-        while(copyT.length > 0){
+        while (copyT.length > 0) {
             // df
             // let len = copyT.length;
             let first = copyT.shift();
             let second = copyT.splice(Random.rand(0, copyT.length), 1)[0];
             // console.log(second, i)  
-            if(!second){
+            if (!second) {
                 // console.log('exited', i);
                 return;
             }
@@ -377,37 +377,37 @@ class TileContainer{
         }
     }
 
-    demo(tile){
+    demo(tile) {
         // call this to show demo 
         tile.slideDown(1)
-            .then(()=>{
+            .then(() => {
                 tile.slideRight(1)
-                .then(()=>{
-                    tile.slideUp(0)
-                    .then(()=>{
-                        tile.restore();
+                    .then(() => {
+                        tile.slideUp(0)
+                            .then(() => {
+                                tile.restore();
+                            });
                     });
-                });
             });
     }
 
-    select(tile){
+    select(tile) {
         return tile.slideUp(1);
     }
 
-    deselect(tile){
+    deselect(tile) {
         return tile.slideDown(0);
     }
 
-    async swapFast(tile, index){
-        
-        if (tile.index == index){
+    async swapFast(tile, index) {
+
+        if (tile.index == index) {
             console.warn("can't swap to myself");
             return;
         }
 
         const direction = tile.index < index ? 1 : -1;
-        const places = Math.abs(tile.index -  index);
+        const places = Math.abs(tile.index - index);
         const otherTile = this.tiles[index];
 
         tile.slideX(direction, places);
@@ -421,32 +421,32 @@ class TileContainer{
      * @param {Tile} tile 
      * @param {Number} index 
      */
-    async swapPos(tile, index){
-        
-        if (tile.index == index){
+    async swapPos(tile, index) {
+
+        if (tile.index == index) {
             console.warn("can't swap to myself");
             return;
         }
-        
+
 
         await this.select(tile);
-        
+
         const direction = tile.index < index ? 1 : -1;
 
-        while (tile.index != index){
+        while (tile.index != index) {
             const places = 1;  // keep moving tile by one in given direction it reaches dest [target index]
             const otherTile = this.tiles[tile.index + places * direction];
 
             tile.slideX(direction, places);
             await otherTile.slideX(direction * -1, places) // slide to the opposite direction
-            
+
             // .then(()=>{
             //     if(tile.index == index){
             //         this.deselect(tile);
             //     }
             // });
 
-            if(tile.index == index){
+            if (tile.index == index) {
                 await this.deselect(tile);
             }
 
@@ -458,8 +458,8 @@ class TileContainer{
     /**
      * @returns {Array}
      */
-    toTiles(domElems){
-        return [...domElems.map((index, $tile)=>{
+    toTiles(domElems) {
+        return [...domElems.map((index, $tile) => {
             $tile = $($tile);
             return new Tile($tile.text(), index, $tile, this);
         })];
@@ -467,23 +467,23 @@ class TileContainer{
 }
 
 
-class Main{
-    constructor(){
+class Main {
+    constructor() {
         const $tileContainer = $('.tile-container');
         const $tiles = $tileContainer.find('.tile');
 
         const tileContainer = new TileContainer($tiles);
-        
-        $('#bubble-sort').on('click', ()=>{
+
+        $('#bubble-sort').on('click', () => {
             tileContainer.bubbleSort();
         });
-        $('#linear-sort').on('click', ()=>{
+        $('#linear-sort').on('click', () => {
             tileContainer.linearSort();
         });
-        $('#insertion-sort').on('click', ()=>{
+        $('#insertion-sort').on('click', () => {
             tileContainer.insertionSort();
         });
-        $('.fa-random').on('click', ()=>{
+        $('.fa-random').on('click', () => {
             tileContainer.shuffle();
         });//.click();
 
@@ -493,6 +493,6 @@ class Main{
 }
 
 
-$(document).ready(()=>{
+$(document).ready(() => {
     const main = new Main();
 });
